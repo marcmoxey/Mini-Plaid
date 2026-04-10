@@ -1,3 +1,4 @@
+
 let transactions = [
   {
     id: 1,
@@ -44,7 +45,7 @@ export const getTransaction = (request, response, next) => {
 };
 
 // @desc Create transaction 
-// @route POST /api/transaction 
+// @route POST /api/transactions 
 export const createTransaction = (request, response, next) => {
     const newTransaction = {
         id: transactions.length + 1, 
@@ -71,4 +72,37 @@ export const createTransaction = (request, response, next) => {
 
     transactions.push(newTransaction);
     response.status(201).json(transactions);
+};
+
+
+// @desc Update transaction 
+// @route PUT /api/transactions
+export const updateTransaction = (request, response, next) => {
+  const id = parseInt(request.params.id); 
+  const transaction = transactions.find((transaction) => transaction.id == id); 
+
+  if(!transaction) {
+      const error = new Error('Transaction was not found');
+      error.status = 400; 
+      return next(error); 
+  }
+
+    transaction.merchant = request.body.merchant; 
+    transaction.price = request.body.price; 
+    response.status(200).json(transactions);
+}; 
+
+// @desc Delete transaction 
+// @route DELETE /api/transactions
+export const deleteTransaction = (request, response, next) => {
+  const id = parseInt(request.params.id); 
+  const transaction = transactions.find((transaction) => transaction.id === id); 
+
+  if(!transaction) {
+    return response.status(400)
+    .json({ message: 'Transaction was not found'});
+  }
+
+  transactions = transactions.filter((transaction) =>  transaction.id === id); 
+  response.status(200).json(transactions);
 };
