@@ -20,11 +20,11 @@ export const getUsers = (request, response, next) => {
 export const getUser = (request,response, next) => {
     const id = parseInt(request.params.id); 
 
-    const user = users.find((user) => users.id === id); 
+    const user = users.find((user) => user.id === id); 
 
     if (!user) {
         const error = new Error('User was not found')
-        error.status(404); 
+        error.status = 404; 
         next(error);
     }
 
@@ -37,22 +37,25 @@ export const getUser = (request,response, next) => {
 export const createUser = (request,response, next) => {
     const newUser = {
         id: users.length + 1, 
-       firstName: request.firstName,
-       lastName: request.lastName,
-       username: request.username
+       firstName: request.body.firstName,
+       lastName: request.body.lastName,
+       username: request.body.username
     };
 
-    if(newUser.firstName.length < 3 || newUser.lastName.length < 3 )  {
+    if(!newUser.firstName || !newUser.lastName || newUser.firstName.length <= 3 || newUser.lastName.length <= 3 )  {
         const error = new Error('Please enter a valid name greater than 3 characters'); 
         error.status = 400; 
         return next(error);
     }
 
-    if(newUser.username.length < 5 ) {
+    if(!newUser.username || newUser.username.length <= 5 ) {
         const error = new Error('Please enter a valid username greater than 5 characters')
+         error.status = 400;
+         return next(error);
+
     } else if(users.find(user => user.username === newUser.username)) {
                 const error = new Error(
-                  `${user} has been taken, please enter a valid username`,
+                  `${newUser.username} has been taken, please enter a valid username`,
                 );
                 error.status = 400;
                 return next(error);
@@ -85,13 +88,13 @@ export const updateUser = (request, response, next) => {
 
 export const deleteUser = (request, response, next) => {
     const id = parseInt(request.params.id);
-     const users = user.find((user) => user.id === id ); 
+     const user = users.find((user) => user.id === id ); 
 
      if(!user) {
         return response.status(400)
         .json({ message: 'User was not found'})
      }
 
-     users = user.filter((user) => user.id === id); 
+     users = users.filter((user) => user.id === id); 
      response.status(200).json(users);
 }
