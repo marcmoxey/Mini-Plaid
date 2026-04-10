@@ -2,6 +2,7 @@ import express from "express";
 import path from "path";
 import url from "url";
 import users from "./Routes/users.js";
+import transactions from "./Routes/transactions.js"
 import logger from "./Middleware/logger.js";
 import errorHandler from "./Middleware/error.js";
 import notFound from "./Middleware/notFound.js";
@@ -21,7 +22,21 @@ app.use(express.urlencoded({ extended: false }));
 // Logger middleware
 app.use(logger);
 
+
+// setup static folder 
+app.use(express.static(path.join(__dirname, 'public')));
+
+
 // Routes
 app.use("/api/users", users);
+app.use("/api/transactions", transactions)
+
+
+
+
+// Error Handler middleware 
+app.use(notFound);
+app.use(errorHandler);
+
 
 app.listen(port, () => console.log(`Server is running on port ${port}`));
