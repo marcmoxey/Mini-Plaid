@@ -11,5 +11,9 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "module"
+  "type": "module",
+  "dependencies": {
+    "colors": "^1.4.0",
+    "express": "^5.2.1"
+  }
 }
