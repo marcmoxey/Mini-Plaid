@@ -38,7 +38,7 @@ export const getTransaction = (request, response, next) => {
     if (!transaction) {
         const error = new Error('transaction was not found'); 
         error.status = 404; 
-        next(error);
+        return next(error);
     }
 
     response.status(200).json(transaction);
@@ -47,13 +47,6 @@ export const getTransaction = (request, response, next) => {
 // @desc Create transaction 
 // @route POST /api/transactions 
 export const createTransaction = (request, response, next) => {
-    const newTransaction = {
-        id: transactions.length + 1, 
-        merchant: request.body.merchant, 
-        price: request.body.price, 
-        date: new Date()
-    }; 
-
     if (
       newTransaction.price === null ||
       Number.isNaN(newTransaction.price) ||
@@ -64,14 +57,24 @@ export const createTransaction = (request, response, next) => {
       return next(error);
     } 
 
-    if(!newTransaction.merchant || !newTransaction.merchant.length < 0) {
-          const error = new Error("Please enter a valid merchant");
-          error.status = 400;
-          return next(error);
-    }
+   if (
+     !newTransaction.merchant ||
+     newTransaction.merchant.trim().length === 0
+   ) {
+     const error = new Error("Please enter a valid merchant");
+     error.status = 400;
+     return next(error);
+   }
+
+        const newTransaction = {
+          id: transactions.length + 1,
+          merchant: request.body.merchant,
+          price: request.body.price,
+          date: new Date(),
+        }; 
 
     transactions.push(newTransaction);
-    response.status(201).json(transactions);
+    response.status(201).json(transaction);
 };
 
 
@@ -103,6 +106,6 @@ export const deleteTransaction = (request, response, next) => {
     .json({ message: 'Transaction was not found'});
   }
 
-  transactions = transactions.filter((transaction) =>  transaction.id === id); 
+  transactions = transactions.filter((transaction) =>  transaction.id !== id); 
   response.status(200).json(transactions);
 };

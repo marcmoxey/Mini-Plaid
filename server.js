@@ -6,8 +6,16 @@ import transactions from "./Routes/transactions.js"
 import logger from "./Middleware/logger.js";
 import errorHandler from "./Middleware/error.js";
 import notFound from "./Middleware/notFound.js";
+import dotenv from "dotenv";
+dotenv.config();
+import pool from "./db.js";
 
-const port = process.env.port || 8000;
+
+
+
+
+
+const port = process.env.PORT || 8000;
 
 const __filename = url.fileURLToPath(import.meta.url);
 

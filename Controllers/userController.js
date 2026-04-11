@@ -25,7 +25,7 @@ export const getUser = (request,response, next) => {
     if (!user) {
         const error = new Error('User was not found')
         error.status = 404; 
-        next(error);
+        return next(error);
     }
 
     response.status(200).json(user); 
@@ -95,6 +95,6 @@ export const deleteUser = (request, response, next) => {
         .json({ message: 'User was not found'})
      }
 
-     users = users.filter((user) => user.id === id); 
+     users = users.filter((user) => user.id !== id); 
      response.status(200).json(users);
 }
